@@ -1,6 +1,6 @@
-# Android 15 (API Level 35) Configuration
+# Android 15 (API Level 35) Configuration with 16KB Memory Pages Support
 
-This app has been configured to support Android 15 requirements and edge-to-edge display.
+This app has been configured to support Android 15 requirements, edge-to-edge display, and 16KB memory pages.
 
 ## Configuration Applied
 
@@ -22,6 +22,9 @@ This app has been configured to support Android 15 requirements and edge-to-edge
   - Configures compile SDK to 35
   - Sets minimum SDK to 24
   - Adds Android manifest configuration for edge-to-edge
+  - **NEW**: 16KB memory pages support configuration
+  - **NEW**: ART profiles and R8 optimization enabled
+  - **NEW**: Build.gradle modifications for memory optimization
 
 ## Manual Configuration Required
 
@@ -38,7 +41,19 @@ Since `app.json` cannot be modified directly, you need to manually add the follo
           "android": {
             "compileSdkVersion": 35,
             "targetSdkVersion": 35,
-            "minSdkVersion": 24
+            "minSdkVersion": 24,
+            "enableProguardInReleaseBuilds": true,
+            "enableHermes": true,
+            "packagingOptions": {
+              "pickFirst": [
+                "**/libc++_shared.so",
+                "**/libjsc.so"
+              ]
+            },
+            "proguardFiles": [
+              "proguard-android-optimize.txt",
+              "proguard-rules.pro"
+            ]
           }
         }
       ]
@@ -53,6 +68,15 @@ Since `app.json` cannot be modified directly, you need to manually add the follo
 2. **Proper Safe Area Handling**: Uses React Native Safe Area Context for proper insets
 3. **Transparent System Bars**: Status bar and navigation bar are transparent
 4. **Target SDK 35**: Meets Google Play Store requirements for Android 15
+5. **16KB Memory Pages Support**: 
+   - Optimized memory allocation for Android 15 devices
+   - ART profiles enabled for better performance
+   - R8 optimization for reduced app size
+   - Proper JNI library packaging
+6. **Enhanced Build Configuration**:
+   - Hermes JavaScript engine enabled
+   - ProGuard optimization in release builds
+   - Java 17 compatibility
 
 ## Testing
 
@@ -63,11 +87,48 @@ Since `app.json` cannot be modified directly, you need to manually add the follo
 
 ## Dependencies Added
 
-- `expo-build-properties`: For build configuration
+- `expo-build-properties`: For build configuration and 16KB pages support
 - `react-native-edge-to-edge`: For enhanced edge-to-edge support (optional)
+
+## 16KB Memory Pages Support Details
+
+Android 15 introduces support for devices with 16KB memory pages (instead of the traditional 4KB). This configuration ensures your app works optimally on these devices:
+
+### Gradle Properties Added:
+- `android.experimental.enableArtProfiles=true`: Enables ART profiles for better performance
+- `android.experimental.r8.dex-startup-optimization=true`: Optimizes app startup time
+
+### Manifest Configuration:
+- `android:supports_16kb_pages=true`: Declares support for 16KB memory pages
+- `android:largeHeap=true`: Allows larger heap allocation when needed
+- `android:hardwareAccelerated=true`: Enables hardware acceleration
+
+### Build Configuration:
+- Java 17 compatibility for better performance
+- Optimized JNI library packaging
+- ProGuard optimization enabled for release builds
 
 ## Notes
 
 - Expo SDK 53 has edge-to-edge enabled by default for new projects
 - The app uses proper safe area insets to handle different device configurations
 - System UI is configured to be transparent for immersive experience
+- 16KB memory pages support is backward compatible with 4KB page devices
+- The configuration automatically optimizes for both memory page sizes
+
+## Troubleshooting 16KB Pages Issues
+
+If you encounter crashes related to memory allocation:
+
+1. **Check native modules**: Ensure all native dependencies support 16KB pages
+2. **Verify JNI libraries**: Make sure all .so files are properly packaged
+3. **Test on different devices**: Test on both 4KB and 16KB page devices
+4. **Monitor memory usage**: Use Android Studio profiler to check memory allocation patterns
+
+## Performance Benefits
+
+With 16KB memory pages support enabled:
+- Reduced memory fragmentation
+- Better cache locality
+- Improved app startup times
+- More efficient memory allocation for large objects
