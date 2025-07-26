@@ -1,5 +1,5 @@
 Privacy Policy for UpkeepAI
-Last updated: [Insert Date]
+Last updated: 07/25/2025
 
 At UpkeepAI, we value your privacy and are committed to protecting your personal data. This Privacy Policy explains how we collect, use, and protect the information you provide while using our AI-powered car and home maintenance application.
 
@@ -75,6 +75,4 @@ We may update this policy occasionally. Changes will be posted in the app and on
 
 8. Contact Us
 If you have questions about this Privacy Policy, contact us at:
-
-📧 support@upkeepai.com
-🌐 www.upkeepai.com/privacy
+mcclurejeremy@yahoo.com
