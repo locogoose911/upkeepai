@@ -1,81 +1,81 @@
 {
-"expo": {
-  "name": "UpkeepAI production",
-  "slug": "upkeepai-8nnrp3ty",
-  "version": "1.0.0",
-  "orientation": "portrait",
-  "icon": "./assets/images/icon.png",
-  "scheme": "myapp",
-  "userInterfaceStyle": "automatic",
-  "newArchEnabled": true,
-  "splash": {
-    "image": "./assets/images/splash-icon.png",
-    "resizeMode": "contain",
-    "backgroundColor": "#ffffff"
-  },
-  "ios": {
-    "supportsTablet": true,
-    "bundleIdentifier": "app.rork.upkeepai-8nnrp3ty",
-    "infoPlist": {
-      "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos",
-      "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access your camera",
-      "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to access your microphone"
-    }
-  },
-  "android": {
-    "adaptiveIcon": {
-      "foregroundImage": "./assets/images/adaptive-icon.png",
+  "expo": {
+    "name": "UpkeepAI production",
+    "slug": "upkeepai-8nnrp3ty",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/splash-icon.png",
+      "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "package": "app.rork.upkeepai-8nnrp3ty",
-    "permissions": [
-      "CAMERA",
-      "READ_EXTERNAL_STORAGE",
-      "WRITE_EXTERNAL_STORAGE"
-    ]
-  },
-  "web": {
-    "favicon": "./assets/images/favicon.png"
-  },
-  "plugins": [
-    "./android15-config",
-    [
-      "expo-build-properties",
-      {
-        "android": {
-          "compileSdkVersion": 35,
-          "targetSdkVersion": 35,
-          "minSdkVersion": 24,
-          "enableProguardInReleaseBuilds": true,
-          "enableHermes": true,
-          "packagingOptions": {
-            "pickFirst": [
-              "**/libc++_shared.so",
-              "**/libjsc.so"
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "app.rork.upkeepai-8nnrp3ty",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos",
+        "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access your camera",
+        "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to access your microphone"
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "app.rork.upkeepai-8nnrp3ty",
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "./android15-config",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 35,
+            "minSdkVersion": 24,
+            "enableProguardInReleaseBuilds": true,
+            "enableHermes": true,
+            "packagingOptions": {
+              "pickFirst": [
+                "**/libc++_shared.so",
+                "**/libjsc.so"
+              ]
+            },
+            "proguardFiles": [
+              "proguard-android-optimize.txt",
+              "proguard-rules.pro"
             ]
-          },
-          "proguardFiles": [
-            "proguard-android-optimize.txt",
-            "proguard-rules.pro"
-          ]
+          }
         }
-      }
+      ],
+      [
+        "expo-router",
+        {
+          "origin": "https://rork.com/"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ]
     ],
-    [
-      "expo-router",
-      {
-        "origin": "https://rork.com/"
-      }
-    ],
-    [
-      "expo-image-picker",
-      {
-        "photosPermission": "The app accesses your photos to let you share them with your friends."
-      }
-    ]
-  ],
-  "experiments": {
-    "typedRoutes": true
+    "experiments": {
+      "typedRoutes": true
+    }
   }
-}
 }
