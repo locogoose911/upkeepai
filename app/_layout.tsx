@@ -1,3 +1,6 @@
+// Import polyfills first
+import '@/lib/react-polyfill';
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -11,6 +14,8 @@ import { Colors } from "@/constants/colors";
 import { useVehicleStore } from "@/hooks/useVehicleStore";
 import { trpc, trpcClient } from "@/lib/trpc";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+
+
 
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
