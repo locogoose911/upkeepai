@@ -351,9 +351,48 @@ export const useVehicleStore = create<VehicleState>((set, get) => ({
       
       console.log('Raw data loaded:', { vehiclesData, tasksData, recallsData });
       
-      let vehicles = vehiclesData ? JSON.parse(vehiclesData) : [];
-      const maintenanceTasks = tasksData ? JSON.parse(tasksData) : [];
-      const recalls = recallsData ? JSON.parse(recallsData) : [];
+      let vehicles: Vehicle[] = [];
+      let maintenanceTasks: MaintenanceTask[] = [];
+      let recalls: Recall[] = [];
+      
+      // Safely parse vehicles data
+      if (vehiclesData) {
+        try {
+          vehicles = JSON.parse(vehiclesData);
+          if (!Array.isArray(vehicles)) {
+            vehicles = [];
+          }
+        } catch (parseError) {
+          console.error('Error parsing vehicles data:', parseError);
+          vehicles = [];
+        }
+      }
+      
+      // Safely parse maintenance tasks data
+      if (tasksData) {
+        try {
+          maintenanceTasks = JSON.parse(tasksData);
+          if (!Array.isArray(maintenanceTasks)) {
+            maintenanceTasks = [];
+          }
+        } catch (parseError) {
+          console.error('Error parsing maintenance tasks data:', parseError);
+          maintenanceTasks = [];
+        }
+      }
+      
+      // Safely parse recalls data
+      if (recallsData) {
+        try {
+          recalls = JSON.parse(recallsData);
+          if (!Array.isArray(recalls)) {
+            recalls = [];
+          }
+        } catch (parseError) {
+          console.error('Error parsing recalls data:', parseError);
+          recalls = [];
+        }
+      }
       
       // Migrate existing vehicles to include type field
       vehicles = vehicles.map((vehicle: Vehicle) => ({

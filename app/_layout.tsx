@@ -22,13 +22,21 @@ function RootLayoutNav() {
   const loadData = useVehicleStore(state => state.loadData);
 
   useEffect(() => {
-    loadData();
+    const initializeData = async () => {
+      try {
+        await loadData();
+        
+        // Configure system UI for Android 15 edge-to-edge
+        if (Platform.OS === 'android') {
+          await SystemUI.setBackgroundColorAsync('transparent');
+          // Edge-to-edge is enabled by default in Expo SDK 53 for Android 15+
+        }
+      } catch (error) {
+        console.error('Error initializing data:', error);
+      }
+    };
     
-    // Configure system UI for Android 15 edge-to-edge
-    if (Platform.OS === 'android') {
-      SystemUI.setBackgroundColorAsync('transparent');
-      // Edge-to-edge is enabled by default in Expo SDK 53 for Android 15+
-    }
+    initializeData();
   }, [loadData]);
 
   return (

@@ -34,7 +34,15 @@ try {
   console.log('tRPC client created successfully');
 } catch (error) {
   console.error('Failed to create tRPC client:', error);
-  throw error;
+  // Create a fallback client to prevent crashes
+  trpcClient = createTRPCClient<AppRouter>({
+    links: [
+      httpLink({
+        url: 'http://localhost:3000/api/trpc',
+        transformer: superjson,
+      }),
+    ],
+  });
 }
 
 export { trpcClient };
