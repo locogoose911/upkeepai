@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { publicProcedure } from "../../../create-context";
+import { publicProcedure } from "../../create-context";
 
-const hiRoute = publicProcedure
+export const hiProcedure = publicProcedure
   .input(z.object({ name: z.string() }))
   .mutation(({ input }: { input: { name: string } }) => {
     return {
@@ -9,5 +9,3 @@ const hiRoute = publicProcedure
       date: new Date(),
     };
   });
-
-export default hiRoute;

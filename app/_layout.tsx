@@ -98,6 +98,7 @@ export default function RootLayout() {
   useEffect(() => {
     const initializeApp = async () => {
       try {
+        console.log('Initializing app...');
         await SplashScreen.hideAsync();
         
         // Configure system UI for edge-to-edge on Android 15
@@ -105,6 +106,7 @@ export default function RootLayout() {
           await SystemUI.setBackgroundColorAsync('transparent');
           // Edge-to-edge is enabled by default in Expo SDK 53 for Android 15+
         }
+        console.log('App initialized successfully');
       } catch (error) {
         console.error('Error initializing app:', error);
       }

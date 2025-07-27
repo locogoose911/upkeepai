@@ -1,11 +1,12 @@
 import { createTRPCRouter } from "./create-context";
-import hiRoute from "./routes/example/hi/route";
+import { hiProcedure } from "./routes/example/hi/route";
 
 const appRouter = createTRPCRouter({
   example: createTRPCRouter({
-    hi: hiRoute,
+    hi: hiProcedure,
   }),
 });
 
+export default appRouter;
 export { appRouter };
 export type AppRouter = typeof appRouter;

@@ -27,6 +27,11 @@ try {
       httpLink({
         url: `${baseUrl}/api/trpc`,
         transformer: superjson,
+        headers: () => {
+          return {
+            'Content-Type': 'application/json',
+          };
+        },
       }),
     ],
   });
@@ -40,6 +45,11 @@ try {
       httpLink({
         url: 'http://localhost:3000/api/trpc',
         transformer: superjson,
+        headers: () => {
+          return {
+            'Content-Type': 'application/json',
+          };
+        },
       }),
     ],
   });
