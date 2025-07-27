@@ -40,8 +40,8 @@ if (!(React as any).use) {
 
 // Ensure global React also has the polyfill
 if (typeof globalThis !== 'undefined') {
-  if (globalThis.React && !globalThis.React.use) {
-    globalThis.React.use = (React as any).use;
+  if ((globalThis as any).React && !(globalThis as any).React.use) {
+    (globalThis as any).React.use = (React as any).use;
   }
   
   // Also add to window for web compatibility

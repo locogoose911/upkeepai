@@ -7,7 +7,7 @@ import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
-import { ImageBackground, Platform } from "react-native";
+import { Platform, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import * as SystemUI from "expo-system-ui";
 import { Colors } from "@/constants/colors";
@@ -125,19 +125,15 @@ export default function RootLayout() {
       <QueryClientProvider client={queryClient}>
         <trpc.Provider client={trpcClient} queryClient={queryClient}>
           <SafeAreaProvider>
-            <GestureHandlerRootView style={{ flex: 1 }}>
-              <ImageBackground 
-                source={{ uri: 'https://r2-pub.rork.com/attachments/p2x2ak8mm74e3limttt4d' }}
-                style={{ flex: 1 }}
-                resizeMode="cover"
-              >
+            <GestureHandlerRootView>
+              <View style={{ flex: 1, backgroundColor: Colors.primary.dark }}>
                 <StatusBar 
                   style="light" 
                   translucent={Platform.OS === 'android'}
                   backgroundColor="transparent"
                 />
                 <RootLayoutNav />
-              </ImageBackground>
+              </View>
             </GestureHandlerRootView>
           </SafeAreaProvider>
         </trpc.Provider>
