@@ -342,11 +342,14 @@ export const useVehicleStore = create<VehicleState>((set, get) => ({
   },
   
   loadData: async () => {
+    console.log('Loading data from AsyncStorage...');
     set({ isLoading: true });
     try {
       const vehiclesData = await AsyncStorage.getItem('vehicles');
       const tasksData = await AsyncStorage.getItem('maintenanceTasks');
       const recallsData = await AsyncStorage.getItem('recalls');
+      
+      console.log('Raw data loaded:', { vehiclesData, tasksData, recallsData });
       
       let vehicles = vehiclesData ? JSON.parse(vehiclesData) : [];
       const maintenanceTasks = tasksData ? JSON.parse(tasksData) : [];
@@ -358,10 +361,13 @@ export const useVehicleStore = create<VehicleState>((set, get) => ({
         type: vehicle.type || 'vehicle' // Default to 'vehicle' for existing items
       }));
       
+      console.log('Parsed data:', { vehicles, maintenanceTasks, recalls });
+      
       set({ vehicles, maintenanceTasks, recalls, isLoading: false });
+      console.log('Data loaded successfully');
     } catch (error) {
       console.error('Error loading data:', error);
-      set({ isLoading: false });
+      set({ vehicles: [], maintenanceTasks: [], recalls: [], isLoading: false });
     }
   }
 }));

@@ -1,5 +1,5 @@
 import { createTRPCReact } from "@trpc/react-query";
-import { httpLink } from "@trpc/client";
+import { createTRPCClient, httpLink } from "@trpc/client";
 import type { AppRouter } from "@/backend/trpc/app-router";
 import superjson from "superjson";
 
@@ -10,16 +10,31 @@ const getBaseUrl = () => {
     return process.env.EXPO_PUBLIC_RORK_API_BASE_URL;
   }
 
+  console.error('EXPO_PUBLIC_RORK_API_BASE_URL not found in environment variables');
   throw new Error(
     "No base url found, please set EXPO_PUBLIC_RORK_API_BASE_URL"
   );
 };
 
-export const trpcClient = trpc.createClient({
-  links: [
-    httpLink({
-      url: `${getBaseUrl()}/api/trpc`,
-      transformer: superjson,
-    }),
-  ],
-});
+let trpcClient: ReturnType<typeof createTRPCClient<AppRouter>>;
+
+try {
+  const baseUrl = getBaseUrl();
+  console.log('Creating tRPC client with base URL:', baseUrl);
+  
+  trpcClient = createTRPCClient<AppRouter>({
+    links: [
+      httpLink({
+        url: `${baseUrl}/api/trpc`,
+        transformer: superjson,
+      }),
+    ],
+  });
+  
+  console.log('tRPC client created successfully');
+} catch (error) {
+  console.error('Failed to create tRPC client:', error);
+  throw error;
+}
+
+export { trpcClient };

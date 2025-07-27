@@ -10,6 +10,7 @@ import * as SystemUI from "expo-system-ui";
 import { Colors } from "@/constants/colors";
 import { useVehicleStore } from "@/hooks/useVehicleStore";
 import { trpc, trpcClient } from "@/lib/trpc";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -87,35 +88,45 @@ function RootLayoutNav() {
 
 export default function RootLayout() {
   useEffect(() => {
-    SplashScreen.hideAsync();
+    const initializeApp = async () => {
+      try {
+        await SplashScreen.hideAsync();
+        
+        // Configure system UI for edge-to-edge on Android 15
+        if (Platform.OS === 'android') {
+          await SystemUI.setBackgroundColorAsync('transparent');
+          // Edge-to-edge is enabled by default in Expo SDK 53 for Android 15+
+        }
+      } catch (error) {
+        console.error('Error initializing app:', error);
+      }
+    };
     
-    // Configure system UI for edge-to-edge on Android 15
-    if (Platform.OS === 'android') {
-      SystemUI.setBackgroundColorAsync('transparent');
-      // Edge-to-edge is enabled by default in Expo SDK 53 for Android 15+
-    }
+    initializeApp();
   }, []);
 
   return (
-    <trpc.Provider client={trpcClient} queryClient={queryClient}>
+    <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <SafeAreaProvider>
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <ImageBackground 
-              source={{ uri: 'https://r2-pub.rork.com/attachments/p2x2ak8mm74e3limttt4d' }}
-              style={{ flex: 1 }}
-              resizeMode="cover"
-            >
-              <StatusBar 
-                style="light" 
-                translucent={Platform.OS === 'android'}
-                backgroundColor="transparent"
-              />
-              <RootLayoutNav />
-            </ImageBackground>
-          </GestureHandlerRootView>
-        </SafeAreaProvider>
+        <trpc.Provider client={trpcClient} queryClient={queryClient}>
+          <SafeAreaProvider>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <ImageBackground 
+                source={{ uri: 'https://r2-pub.rork.com/attachments/p2x2ak8mm74e3limttt4d' }}
+                style={{ flex: 1 }}
+                resizeMode="cover"
+              >
+                <StatusBar 
+                  style="light" 
+                  translucent={Platform.OS === 'android'}
+                  backgroundColor="transparent"
+                />
+                <RootLayoutNav />
+              </ImageBackground>
+            </GestureHandlerRootView>
+          </SafeAreaProvider>
+        </trpc.Provider>
       </QueryClientProvider>
-    </trpc.Provider>
+    </ErrorBoundary>
   );
 }
