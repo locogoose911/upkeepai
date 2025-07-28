@@ -2,8 +2,13 @@
 import React from 'react';
 
 // Polyfill for React.use hook if not available
-if (!(React as any).use) {
+if (typeof React !== 'undefined' && !(React as any).use) {
   (React as any).use = function usePolyfill(resource: any) {
+    // Handle context values (most common case for expo-router)
+    if (resource && typeof resource === 'object' && '_currentValue' in resource) {
+      return resource._currentValue;
+    }
+    
     // Handle promises (for Suspense)
     if (resource && typeof resource.then === 'function') {
       // Check if promise is resolved
@@ -28,11 +33,6 @@ if (!(React as any).use) {
       throw resource;
     }
     
-    // Handle context values
-    if (resource && resource._currentValue !== undefined) {
-      return resource._currentValue;
-    }
-    
     // Return the resource as-is for other cases
     return resource;
   };
@@ -40,12 +40,12 @@ if (!(React as any).use) {
 
 // Ensure global React also has the polyfill
 if (typeof globalThis !== 'undefined') {
-  if ((globalThis as any).React && !(globalThis as any).React.use) {
+  if ((globalThis as any).React && typeof (globalThis as any).React === 'object' && !(globalThis as any).React.use) {
     (globalThis as any).React.use = (React as any).use;
   }
   
   // Also add to window for web compatibility
-  if (typeof window !== 'undefined' && (window as any).React && !(window as any).React.use) {
+  if (typeof window !== 'undefined' && (window as any).React && typeof (window as any).React === 'object' && !(window as any).React.use) {
     (window as any).React.use = (React as any).use;
   }
 }

@@ -7,7 +7,7 @@ import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
-import { Platform, View } from "react-native";
+import { Platform, View, Text } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import * as SystemUI from "expo-system-ui";
 import { Colors } from "@/constants/colors";
@@ -29,7 +29,9 @@ function RootLayoutNav() {
   useEffect(() => {
     const initializeData = async () => {
       try {
+        console.log('Starting data initialization...');
         await loadData();
+        console.log('Data loaded successfully');
         
         // Configure system UI for Android 15 edge-to-edge
         if (Platform.OS === 'android') {
@@ -38,6 +40,7 @@ function RootLayoutNav() {
         }
       } catch (error) {
         console.error('Error initializing data:', error);
+        // Don't throw, just log the error to prevent app crash
       }
     };
     
@@ -120,24 +123,35 @@ export default function RootLayout() {
     initializeApp();
   }, []);
 
-  return (
-    <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <trpc.Provider client={trpcClient} queryClient={queryClient}>
-          <SafeAreaProvider>
-            <GestureHandlerRootView>
-              <View style={{ flex: 1, backgroundColor: Colors.primary.dark }}>
-                <StatusBar 
-                  style="light" 
-                  translucent={Platform.OS === 'android'}
-                  backgroundColor="transparent"
-                />
-                <RootLayoutNav />
-              </View>
-            </GestureHandlerRootView>
-          </SafeAreaProvider>
-        </trpc.Provider>
-      </QueryClientProvider>
-    </ErrorBoundary>
-  );
+  try {
+    return (
+      <ErrorBoundary>
+        <QueryClientProvider client={queryClient}>
+          <trpc.Provider client={trpcClient} queryClient={queryClient}>
+            <SafeAreaProvider>
+              <GestureHandlerRootView style={{ flex: 1 }}>
+                <View style={{ flex: 1, backgroundColor: Colors.primary.dark }}>
+                  <StatusBar 
+                    style="light" 
+                    translucent={Platform.OS === 'android'}
+                    backgroundColor="transparent"
+                  />
+                  <RootLayoutNav />
+                </View>
+              </GestureHandlerRootView>
+            </SafeAreaProvider>
+          </trpc.Provider>
+        </QueryClientProvider>
+      </ErrorBoundary>
+    );
+  } catch (error) {
+    console.error('Error rendering RootLayout:', error);
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.primary.dark }}>
+        <Text style={{ color: Colors.text.primary, fontSize: 18, textAlign: 'center', padding: 20 }}>
+          App initialization error. Please restart the app.
+        </Text>
+      </View>
+    );
+  }
 }

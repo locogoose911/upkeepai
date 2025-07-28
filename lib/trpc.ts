@@ -18,14 +18,11 @@ const getBaseUrl = () => {
 
 let trpcClient: ReturnType<typeof createTRPCClient<AppRouter>>;
 
-try {
-  const baseUrl = getBaseUrl();
-  console.log('Creating tRPC client with base URL:', baseUrl);
-  
-  trpcClient = createTRPCClient<AppRouter>({
+const createClient = (url: string) => {
+  return createTRPCClient<AppRouter>({
     links: [
       httpLink({
-        url: `${baseUrl}/api/trpc`,
+        url,
         transformer: superjson,
         headers: () => {
           return {
@@ -35,24 +32,17 @@ try {
       }),
     ],
   });
-  
+};
+
+try {
+  const baseUrl = getBaseUrl();
+  console.log('Creating tRPC client with base URL:', baseUrl);
+  trpcClient = createClient(`${baseUrl}/api/trpc`);
   console.log('tRPC client created successfully');
 } catch (error) {
   console.error('Failed to create tRPC client:', error);
   // Create a fallback client to prevent crashes
-  trpcClient = createTRPCClient<AppRouter>({
-    links: [
-      httpLink({
-        url: 'http://localhost:3000/api/trpc',
-        transformer: superjson,
-        headers: () => {
-          return {
-            'Content-Type': 'application/json',
-          };
-        },
-      }),
-    ],
-  });
+  trpcClient = createClient('http://localhost:3000/api/trpc');
 }
 
 export { trpcClient };

@@ -356,11 +356,11 @@ export const useVehicleStore = create<VehicleState>((set, get) => ({
       let recalls: Recall[] = [];
       
       // Safely parse vehicles data
-      if (vehiclesData) {
+      if (vehiclesData && vehiclesData !== 'undefined' && vehiclesData !== 'null') {
         try {
-          vehicles = JSON.parse(vehiclesData);
-          if (!Array.isArray(vehicles)) {
-            vehicles = [];
+          const parsed = JSON.parse(vehiclesData);
+          if (Array.isArray(parsed)) {
+            vehicles = parsed;
           }
         } catch (parseError) {
           console.error('Error parsing vehicles data:', parseError);
@@ -369,11 +369,11 @@ export const useVehicleStore = create<VehicleState>((set, get) => ({
       }
       
       // Safely parse maintenance tasks data
-      if (tasksData) {
+      if (tasksData && tasksData !== 'undefined' && tasksData !== 'null') {
         try {
-          maintenanceTasks = JSON.parse(tasksData);
-          if (!Array.isArray(maintenanceTasks)) {
-            maintenanceTasks = [];
+          const parsed = JSON.parse(tasksData);
+          if (Array.isArray(parsed)) {
+            maintenanceTasks = parsed;
           }
         } catch (parseError) {
           console.error('Error parsing maintenance tasks data:', parseError);
@@ -382,11 +382,11 @@ export const useVehicleStore = create<VehicleState>((set, get) => ({
       }
       
       // Safely parse recalls data
-      if (recallsData) {
+      if (recallsData && recallsData !== 'undefined' && recallsData !== 'null') {
         try {
-          recalls = JSON.parse(recallsData);
-          if (!Array.isArray(recalls)) {
-            recalls = [];
+          const parsed = JSON.parse(recallsData);
+          if (Array.isArray(parsed)) {
+            recalls = parsed;
           }
         } catch (parseError) {
           console.error('Error parsing recalls data:', parseError);
@@ -394,11 +394,24 @@ export const useVehicleStore = create<VehicleState>((set, get) => ({
         }
       }
       
-      // Migrate existing vehicles to include type field
-      vehicles = vehicles.map((vehicle: Vehicle) => ({
-        ...vehicle,
-        type: vehicle.type || 'vehicle' // Default to 'vehicle' for existing items
-      }));
+      // Migrate existing vehicles to include type field and ensure all required properties
+      vehicles = vehicles.map((vehicle: any) => {
+        if (!vehicle || typeof vehicle !== 'object') {
+          return null;
+        }
+        return {
+          id: vehicle.id || Date.now().toString(),
+          make: vehicle.make || '',
+          model: vehicle.model || '',
+          year: vehicle.year || new Date().getFullYear(),
+          type: vehicle.type || 'vehicle',
+          mileage: vehicle.mileage || 0,
+          hoursUsed: vehicle.hoursUsed || 0,
+          pendingTasks: vehicle.pendingTasks || 0,
+          lastUpdated: vehicle.lastUpdated || new Date().toISOString(),
+          ...vehicle
+        };
+      }).filter(Boolean) as Vehicle[];
       
       console.log('Parsed data:', { vehicles, maintenanceTasks, recalls });
       
